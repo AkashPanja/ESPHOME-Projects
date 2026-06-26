@@ -1,0 +1,197 @@
+esphome:
+  name: firstfloor
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+api:
+  encryption:
+    key: !secret firstfloorkey
+
+ota:
+  - platform: esphome
+    password: !secret firstfloorotakey
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid1
+    password: !secret wifi_password1
+    
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "First-Floor Fallback Hotspot"
+    password: !secret wifi_password
+
+captive_portal:
+
+web_server:
+  port: 80
+
+text_sensor:
+  - platform: version
+    name: "First Floor Dashboard"
+  - platform: template
+    name: "First Floor Dashboard Name"
+    lambda: |-
+      return {"First Floor Dashboard"};
+    update_interval: 30s
+    
+switch:
+  - platform: shutdown
+    name: "First Floor Shutdown"
+    
+  - platform: restart
+    name: "First Floor Restart"
+    
+  - platform: gpio
+    name: "F1O1"
+    icon: "mdi:toggle-switch"
+    id: F1O1
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 25
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O2"
+    icon: "mdi:toggle-switch"
+    id: F1O2
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 26
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O3"
+    icon: "mdi:toggle-switch"
+    id: F1O3
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 27
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O4"
+    icon: "mdi:toggle-switch"
+    id: F1O4
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 13
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O5"
+    icon: "mdi:toggle-switch"
+    id: F1O5
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 22
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O6"
+    icon: "mdi:toggle-switch"
+    id: F1O6
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 23
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O7"
+    icon: "mdi:toggle-switch"
+    id: F1O7
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 21
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O8"
+    icon: "mdi:toggle-switch"
+    id: F1O8
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 18
+      inverted: false
+    
+  - platform: gpio
+    name: "F1O9"
+    icon: "mdi:toggle-switch"
+    id: F1O9
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 19
+      inverted: false
+    
+binary_sensor:
+  - platform: gpio
+    name: "F1I1"
+    pin:
+      number: 36
+      mode:
+        input: true
+    on_press:
+      then:
+        - switch.toggle: F1O3
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+  - platform: gpio
+    name: "F1I2"
+    pin:
+      number: 39
+      mode:
+        input: true
+    on_press:
+      then:
+        - switch.toggle: F1O2
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+  - platform: gpio
+    name: "F1I3"
+    pin:
+      number: 34
+      mode:
+        input: true
+    on_press:
+      then:
+        - switch.toggle: F1O1
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+  - platform: gpio
+    name: "F1I4"
+    pin:
+      number: 35
+      mode:
+        input: true
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+  - platform: gpio
+    name: "F1I5"
+    pin:
+      number: 32
+      mode:
+        input: true
+        pulldown: true
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms 
+  - platform: gpio
+    name: "F1I6"
+    pin:
+      number: 33
+      mode:
+        input: true
+        pulldown: true
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms

@@ -1,0 +1,49 @@
+esphome:
+  name: third-floor-speaker
+  friendly_name: Third Floor Speaker
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "iBKcm9sSNJ4H/JcdKLuTNeG6vByox7ai9OLRejNwgcM="
+
+ota:
+  - platform: esphome
+    password: "62b676ca720eb513b6cf91dd45479a7d"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Third-Floor-Speaker"
+    password: "26siNbPCnDL4"
+
+captive_portal:
+
+i2s_audio:
+  - id: i2s_out
+    i2s_lrclk_pin: GPIO14 
+    i2s_bclk_pin: GPIO27
+  - id: i2s_in
+    i2s_lrclk_pin: GPIO32 #ws
+    i2s_bclk_pin: GPIO33 #sck
+
+# LR to be grounded
+
+media_player:
+  - platform: i2s_audio
+    name: ESPHome I2S Media Player
+    dac_type: external
+    i2s_audio_id: i2s_out
+    i2s_dout_pin: GPIO25
+    mode: stereo

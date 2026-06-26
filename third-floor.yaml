@@ -1,0 +1,181 @@
+esphome:
+  name: third-floor
+  friendly_name: Third Floor
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+api:
+  encryption:
+    key: !secret firstfloorkey
+
+ota:
+  - platform: esphome
+    password: !secret firstfloorotakey
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Thirdfloor Fallback Hotspot"
+    password: !secret wifi_password
+
+captive_portal:
+
+text_sensor:
+  - platform: version
+    name: "Third Floor Dashboard"
+  - platform: template
+    name: "Third Floor Dashboard Name"
+    lambda: |-
+      return {"Third Floor Dashboard"};
+    update_interval: 300s
+
+web_server:
+  port: 80
+    
+binary_sensor:
+  - platform: gpio
+    name: "Ground Water Tank Sensor"
+    pin:
+      number: 36
+      mode:
+        input: true
+    filters:
+      - delayed_on: 150ms
+      - delayed_off: 150ms
+    
+  - platform: gpio
+    name: "Supply Water Tank Sensor"
+    pin:
+      number: 34
+      mode:
+        input: true
+    filters:
+      - delayed_on: 150ms
+      - delayed_off: 150ms
+        
+  - platform: gpio
+    name: "Ground Water Tank Sensor2"
+    pin:
+      number: 39
+      mode:
+        input: true
+    filters:
+      - delayed_on: 150ms
+      - delayed_off: 150ms
+    
+  - platform: gpio
+    name: "Supply Water Tank Sensor2"
+    pin:
+      number: 35
+      mode:
+        input: true
+    filters:
+      - delayed_on: 150ms
+      - delayed_off: 150ms
+
+  - platform: gpio
+    name: "Hall Light 1"
+    pin:
+      number: 23
+      mode:
+        input: true        
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+    on_press:
+      then:
+        - switch.turn_on: HallLight1        
+    on_release:
+      then:
+        - switch.turn_off: HallLight1
+
+  - platform: gpio
+    name: "Hall Light 2"
+    pin:
+      number: 22
+      mode:
+        input: true  
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+    on_press:
+      then:
+        - switch.turn_on: HallLight2        
+    on_release:
+      then:
+        - switch.turn_off: HallLight2    
+
+  - platform: gpio
+    name: "Terrace Light"
+    pin:
+      number: 21
+      mode:
+        input: true
+    filters:
+      - delayed_on: 300ms
+      - delayed_off: 300ms
+    on_press:
+      then:
+        - switch.turn_on: TerraceLight
+    on_release:
+      then:
+        - switch.turn_off: TerraceLight
+
+switch:
+  - platform: shutdown
+    name: "Third Floor Shutdown"
+    
+  - platform: restart
+    name: "Third Floor Restart"
+    
+  - platform: gpio
+    name: "Terrace Light"
+    icon: "mdi:track-light"
+    id: TerraceLight
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 32
+      
+  - platform: gpio
+    name: "Hall Light 1"
+    icon: "mdi:track-light"
+    id: HallLight1
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 33
+      
+  - platform: gpio
+    name: "Hall Light 2"
+    icon: "mdi:track-light"
+    id: HallLight2
+    restore_mode: ALWAYS_OFF
+    pin:
+     number: 25
+  
+  - platform: gpio
+    name: "Plant Pump"
+    icon: "mdi:watering-can"
+    id: PlantPump
+    restore_mode: ALWAYS_OFF
+    pin:
+      number: 26
+  
+  - platform: gpio
+    name: "VCC 3V"
+    icon: "mdi:Lightning-Bolt"
+    id: VCC
+    restore_mode: ALWAYS_OFF
+    disabled_by_default: True
+    inverted: True
+    pin:
+      number: 19
